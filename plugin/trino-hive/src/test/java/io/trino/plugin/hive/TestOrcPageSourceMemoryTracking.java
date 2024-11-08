@@ -365,7 +365,7 @@ public class TestOrcPageSourceMemoryTracking
                 }
                 assertThat(page).isNotNull();
                 // load all page data
-                page.getPage();
+                page.getPage().getLoadedPage();
                 positionCount += page.getPositionCount();
                 // assert upper bound is tight
                 // ignore the first MAX_BATCH_SIZE rows given the sizes are set when loading the blocks
@@ -375,7 +375,7 @@ public class TestOrcPageSourceMemoryTracking
                     assertThat(page.getSizeInBytes() < (long) maxReadBytes * (MAX_BATCH_SIZE / step) || 1 == page.getPositionCount()).isTrue();
                 }
             }
-
+            pageSource.close();
             // verify the stats are correctly recorded
             Distribution distribution = stats.getMaxCombinedBytesPerRow().getAllTime();
             assertThat((int) distribution.getCount()).isEqualTo(1);
